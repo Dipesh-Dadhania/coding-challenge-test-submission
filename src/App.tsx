@@ -1,4 +1,5 @@
 import React from "react";
+
 import Address from "@/components/Address/Address";
 import AddressBook from "@/components/AddressBook/AddressBook";
 import Button from "@/components/Button/Button";
@@ -10,6 +11,9 @@ import Section from "@/components/Section/Section";
 import useAddressBook from "@/hooks/useAddressBook";
 import useFormFields from "@/hooks/useFormFields";
 import transformAddress, { RawAddressModel } from "./core/models/address";
+import { selectAddress } from "./core/reducers/addressBookSlice";
+import { useAppSelector } from "./core/store/hooks";
+
 import styles from "./App.module.css";
 import { Address as AddressType } from "./types";
 
@@ -39,6 +43,7 @@ function App() {
    * Redux actions
    */
   const { addAddress } = useAddressBook();
+  const savedAddresses = useAppSelector(selectAddress);
 
   // Form field change handlers are now handled by the useFormFields hook
 
@@ -118,6 +123,21 @@ function App() {
 
     if (!foundAddress) {
       setError("Selected address not found");
+      return;
+    }
+
+    // Check if address with same ID and same names already exists
+    const addressExists = savedAddresses.some(
+      (address) =>
+        address.id === foundAddress.id &&
+        address.firstName === formFields.firstName &&
+        address.lastName === formFields.lastName,
+    );
+
+    if (addressExists) {
+      setError(
+        "This address with the same name is already in your address book",
+      );
       return;
     }
 

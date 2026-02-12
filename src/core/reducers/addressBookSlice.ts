@@ -18,9 +18,12 @@ export const addressBookSlice = createSlice({
   initialState,
   reducers: {
     addAddress: (state, action: PayloadAction<Address>) => {
-      // Prevent duplicate addresses by checking if address with same ID already exists
+      // Prevent duplicate addresses only if address ID and names are all the same
       const addressExists = state.addresses.some(
-        (address) => address.id === action.payload.id,
+        (address) =>
+          address.id === action.payload.id &&
+          address.firstName === action.payload.firstName &&
+          address.lastName === action.payload.lastName,
       );
       if (!addressExists) {
         state.addresses.push(action.payload);
