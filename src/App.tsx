@@ -124,7 +124,11 @@ function App() {
     }
 
     // Generate new ID that includes names to ensure same address with different names gets different IDs
-      const newId = generateAddressId(foundAddress, formFields.firstName, formFields.lastName);
+    const newId = generateAddressId(
+      foundAddress,
+      formFields.firstName,
+      formFields.lastName,
+    );
 
     // Check if this exact address with same name already exists
     const addressExists = savedAddresses.some(
@@ -234,15 +238,8 @@ function App() {
           </Form>
         )}
 
-        {/* TODO: Create an <ErrorMessage /> component for displaying an error message */}
         {error && <ErrorMessage message={error} />}
 
-        {/* TODO: Add a button to clear all form fields. 
-        Button must look different from the default primary button, see design. 
-        Button text name must be "Clear all fields"
-        On Click, it must clear all form fields, remove all search results and clear all prior
-        error messages
-        */}
         <Button variant="secondary" onClick={handleClearFields}>
           Clear all fields
         </Button>
