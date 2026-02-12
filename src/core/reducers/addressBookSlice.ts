@@ -18,8 +18,13 @@ export const addressBookSlice = createSlice({
   initialState,
   reducers: {
     addAddress: (state, action: PayloadAction<Address>) => {
-      /** TODO: Prevent duplicate addresses */
-      state.addresses.push(action.payload);
+      // Prevent duplicate addresses by checking if address with same ID already exists
+      const addressExists = state.addresses.some(
+        (address) => address.id === action.payload.id,
+      );
+      if (!addressExists) {
+        state.addresses.push(action.payload);
+      }
     },
     removeAddress: (state, action: PayloadAction<string>) => {
       /** TODO: Write a state update which removes an address from the addresses array. */
