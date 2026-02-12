@@ -78,7 +78,6 @@ function App() {
           (rawAddress: RawAddressModel) => {
             const transformed = transformAddress({
               ...rawAddress,
-              houseNumber: formFields.houseNumber,
             });
             return transformed;
           },
@@ -126,12 +125,16 @@ function App() {
       return;
     }
 
-    // Check if address with same ID and same names already exists
+    // Generate new ID that includes names to ensure same address with different names gets different IDs
+    const newId =
+      `${foundAddress.street}_${foundAddress.houseNumber}_${foundAddress.postcode}_${foundAddress.city}_${formFields.firstName}_${formFields.lastName}`.replace(
+        /\s+/g,
+        "_",
+      );
+
+    // Check if this exact address with same name already exists
     const addressExists = savedAddresses.some(
-      (address) =>
-        address.id === foundAddress.id &&
-        address.firstName === formFields.firstName &&
-        address.lastName === formFields.lastName,
+      (address) => address.id === newId,
     );
 
     if (addressExists) {
@@ -143,6 +146,7 @@ function App() {
 
     addAddress({
       ...foundAddress,
+      id: newId,
       firstName: formFields.firstName,
       lastName: formFields.lastName,
     });
