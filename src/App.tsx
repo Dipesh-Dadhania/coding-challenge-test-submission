@@ -1,6 +1,7 @@
 import React from "react";
 import Address from "@/components/Address/Address";
 import AddressBook from "@/components/AddressBook/AddressBook";
+import Button from "@/components/Button/Button";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import Form from "@/components/Form/Form";
 import InputText from "@/components/InputText/InputText";
@@ -11,7 +12,6 @@ import useFormFields from "@/hooks/useFormFields";
 import transformAddress, { RawAddressModel } from "./core/models/address";
 import styles from "./App.module.css";
 import { Address as AddressType } from "./types";
-import Button from "@/components/Button/Button";
 
 function App() {
   /**
@@ -48,6 +48,12 @@ function App() {
     // Clear previous results and errors
     setError(undefined);
     setAddresses([]);
+
+    if (!formFields.postCode || !formFields.houseNumber) {
+      setError("Post code and house number are required!");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -93,6 +99,11 @@ function App() {
    */
   const handlePersonSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!formFields.firstName || !formFields.lastName) {
+      setError("First name and last name fields mandatory!");
+      return;
+    }
 
     if (!formFields.selectedAddress || !addresses.length) {
       setError(
