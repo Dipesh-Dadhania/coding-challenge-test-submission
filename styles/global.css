@@ -4,35 +4,33 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-/* TODO: Add the 'Roboto' font from Google fonts and add it as a global CSS var called `--font-primary` */
-/* TODO: Make application responsive. It is already for the most part, but it is not optimal for smaller screens.
-* - Making the application responsive using the Mobile First principle.
-*/
-
 :root {
     --font-primary: "Roboto";
-  --border-radius-default: 4px;
-  --border-radius-xl: 15px;
-  --color-accent: #cacfdd;
-  --color-background: #fff;
-  --color-border: #bbb;
-  --color-brand: #413ef7;
-  --color-text: #141925;
-  --color-text-light: #72787d;
+    --border-radius-default: 4px;
+    --border-radius-xl: 15px;
+    --color-accent: #cacfdd;
+    --color-background: #fff;
+    --color-border: #bbb;
+    --color-brand: #413ef7;
+    --color-text: #141925;
+    --color-text-light: #72787d;
     /* Mobile First - smaller widths for mobile */
     --width-input: 100%;
     --width-content: 100%;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  accent-color: var(--color-brand);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    accent-color: var(--color-brand);
     font-size: 16px; /* Smaller base font size for mobile */
-  font-family: var(--font-primary);
-  background: var(--color-accent);
+    font-family: var(--font-primary);
+    background: var(--color-accent);
 }
 
 main {
@@ -40,25 +38,80 @@ main {
 }
 
 small {
-  font-weight: normal;
-  font-size: 0.65em;
-  color: var(--color-text-light);
+    font-weight: normal;
+    font-size: 0.65em;
+    color: var(--color-text-light);
 }
 
 fieldset {
-  border: none;
-  border-bottom: 1px solid var(--color-accent);
-  border-top: 1px solid var(--color-accent);
+    border: none;
+    border-bottom: 1px solid var(--color-accent);
+    border-top: 1px solid var(--color-accent);
     margin: 1.5rem 0; /* Reduced margin for mobile */
-  max-width: var(--width-input);
-  padding: 1rem 0;
-  width: 100%;
+    max-width: var(--width-input);
+    padding: 1rem 0;
+    width: 100%;
 }
 
 legend {
-  color: var(--color-text-light);
+    color: var(--color-text-light);
     font-size: 0.9em; /* Slightly smaller legend text on mobile */
 }
+
+
+/* Button Styles */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--color-brand);
+    border-radius: var(--border-radius-default);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px; /* Touch-friendly minimum */
+}
+
+    .button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .button.primary {
+        background-color: var(--color-brand);
+        color: white;
+        border-color: var(--color-brand);
+    }
+
+        .button.primary:hover:not(:disabled) {
+            background-color: #352bc4;
+            border-color: #352bc4;
+            transform: translateY(-1px);
+        }
+
+        .button.primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+    .button.secondary {
+        background-color: transparent;
+        color: var(--color-brand);
+        border-color: var(--color-brand);
+    }
+
+        .button.secondary:hover:not(:disabled) {
+            background-color: var(--color-brand);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .button.secondary:active:not(:disabled) {
+            transform: translateY(0);
+        }
 
 /* Tablet and larger screens */
 @media (min-width: 768px) {

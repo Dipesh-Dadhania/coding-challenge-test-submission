@@ -4,36 +4,36 @@ import React, { FunctionComponent } from "react";
 import $ from "./Button.module.css";
 
 interface ButtonProps {
-    onClick?: () => void;
-    type?: ButtonType;
-    variant?: ButtonVariant;
-    loading?: boolean;
-    disabled?: boolean;
-    children: React.ReactNode;
+  onClick?: () => void;
+  type?: ButtonType;
+  variant?: ButtonVariant;
+  loading?: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
 }
 
 const Button: FunctionComponent<ButtonProps> = ({
-    children,
-    onClick,
-    type = "button",
-    variant = "primary",
-    loading = false,
-    disabled = false,
+  children,
+  onClick,
+  type = "button",
+  variant = "primary",
+  loading = false,
+  disabled = false,
 }) => {
-    return (
-        <button
-            // TODO: Add conditional classNames
-            // - Must have a condition to set the '.primary' className
-            // - Must have a condition to set the '.secondary' className
-            // - Display loading spinner per demo video. NOTE: add data-testid="loading-spinner" for spinner element (used for grading)
-            className={$.button}
-            type={type}
-            onClick={onClick}
-            disabled={disabled}
-        >
-            {children}
-        </button>
-    );
+  const variantClass = variant === "secondary" ? $.secondary : $.primary;
+  const classNames = `${$.button} ${variantClass}`;
+
+  return (
+    <button
+      className={classNames}
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+      {loading && <span data-testid="loading-spinner">⏳</span>}
+    </button>
+  );
 };
 
 export default Button;

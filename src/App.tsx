@@ -11,6 +11,7 @@ import useFormFields from "@/hooks/useFormFields";
 import transformAddress, { RawAddressModel } from "./core/models/address";
 import styles from "./App.module.css";
 import { Address as AddressType } from "./types";
+import Button from "@/components/Button/Button";
 
 function App() {
   /**
@@ -116,6 +117,12 @@ function App() {
     });
   };
 
+  const handleClearFields = () => {
+    clearFields();
+    setError(undefined);
+    setAddresses([]);
+  };
+
   return (
     <main>
       <Section>
@@ -207,6 +214,9 @@ function App() {
         On Click, it must clear all form fields, remove all search results and clear all prior
         error messages
         */}
+        <Button variant="secondary" onClick={handleClearFields}>
+          Clear all fields
+        </Button>
       </Section>
 
       <Section variant="dark">
