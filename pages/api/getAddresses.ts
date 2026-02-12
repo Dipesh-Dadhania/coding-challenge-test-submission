@@ -18,14 +18,6 @@ export default async function handle(
     });
   }
 
-  if (postcode.length < 4) {
-    return res.status(400).json({
-      status: "error",
-      // DO NOT MODIFY MSG - used for grading
-      errormessage: "Postcode must be at least 4 digits!",
-    });
-  }
-
   /** Implementation of validation logic to ensure input value
    *  is all digits and non negative
    */
@@ -35,11 +27,31 @@ export default async function handle(
 
   // Validate postcode and street number fields
   const fieldsToValidate = [
-    { value: postcode as string, name: "Postcode" },
-    { value: streetnumber as string, name: "Street Number" },
+    { 
+      value: postcode as string, 
+      name: "Postcode",
+      minLength: 4,
+      minLengthError: "Postcode must be at least 4 digits!" // DO NOT MODIFY MSG - used for grading
+    },
+    { 
+      value: streetnumber as string, 
+      name: "Street Number",
+      minLength: undefined,
+      minLengthError: undefined
+    },
   ];
 
   for (const field of fieldsToValidate) {
+    // Check minimum length if specified
+    if (field.minLength !== undefined && field.value.length < field.minLength) {
+      return res.status(400).json({
+        status: "error",
+        // DO NOT MODIFY MSG - used for grading
+        errormessage: field.minLengthError!,
+      });
+    }
+
+    // Check if value is strictly numeric
     if (!isStrictlyNumeric(field.value)) {
       return res.status(400).json({
         status: "error",

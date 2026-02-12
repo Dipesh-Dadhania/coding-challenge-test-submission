@@ -13,6 +13,7 @@ import useFormFields from "@/hooks/useFormFields";
 import transformAddress, { RawAddressModel } from "./core/models/address";
 import { selectAddress } from "./core/reducers/addressBookSlice";
 import { useAppSelector } from "./core/store/hooks";
+import { generateAddressId } from "./utils/generateAddressId";
 
 import styles from "./App.module.css";
 import { Address as AddressType } from "./types";
@@ -98,9 +99,6 @@ function App() {
     }
   };
 
-  /** TODO: Add basic validation to ensure first name and last name fields aren't empty
-   * Use the following error message setError("First name and last name fields mandatory!")
-   */
   const handlePersonSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -126,11 +124,7 @@ function App() {
     }
 
     // Generate new ID that includes names to ensure same address with different names gets different IDs
-    const newId =
-      `${foundAddress.street}_${foundAddress.houseNumber}_${foundAddress.postcode}_${foundAddress.city}_${formFields.firstName}_${formFields.lastName}`.replace(
-        /\s+/g,
-        "_",
-      );
+      const newId = generateAddressId(foundAddress, formFields.firstName, formFields.lastName);
 
     // Check if this exact address with same name already exists
     const addressExists = savedAddresses.some(
