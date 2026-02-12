@@ -1,15 +1,14 @@
 import React from "react";
-
 import Address from "@/components/Address/Address";
 import AddressBook from "@/components/AddressBook/AddressBook";
-import Button from "@/components/Button/Button";
+import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import Form from "@/components/Form/Form";
 import InputText from "@/components/InputText/InputText";
 import Radio from "@/components/Radio/Radio";
 import Section from "@/components/Section/Section";
 import useAddressBook from "@/hooks/useAddressBook";
 import useFormFields from "@/hooks/useFormFields";
 import transformAddress, { RawAddressModel } from "./core/models/address";
-
 import styles from "./App.module.css";
 import { Address as AddressType } from "./types";
 
@@ -51,32 +50,38 @@ function App() {
         setIsLoading(true);
 
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+            const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
             const apiUrl = `${baseUrl}/api/getAddresses?postcode=${encodeURIComponent(formFields.postCode)}&streetnumber=${encodeURIComponent(formFields.houseNumber)}`;
 
             const response = await fetch(apiUrl);
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.errormessage || 'Failed to fetch addresses');
+                throw new Error(data.errormessage || "Failed to fetch addresses");
             }
 
-            if (data.status === 'ok' && data.details) {
+            if (data.status === "ok" && data.details) {
                 // Transform addresses and add house number to each
-                const transformedAddresses = data.details.map((rawAddress: RawAddressModel) => {
-                    const transformed = transformAddress({
-                        ...rawAddress,
-                        houseNumber: formFields.houseNumber
-                    });
-                    return transformed;
-                });
+                const transformedAddresses = data.details.map(
+                    (rawAddress: RawAddressModel) => {
+                        const transformed = transformAddress({
+                            ...rawAddress,
+                            houseNumber: formFields.houseNumber,
+                        });
+                        return transformed;
+                    },
+                );
 
                 setAddresses(transformedAddresses);
             } else {
-                setError(data.errormessage || 'No addresses found');
+                setError(data.errormessage || "No addresses found");
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred while fetching addresses');
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "An error occurred while fetching addresses",
+            );
         } finally {
             setIsLoading(false);
         }
@@ -85,7 +90,7 @@ function App() {
     /** TODO: Add basic validation to ensure first name and last name fields aren't empty
      * Use the following error message setError("First name and last name fields mandatory!")
      */
-    const handlePersonSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const handlePersonSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!formFields.selectedAddress || !addresses.length) {
@@ -121,33 +126,37 @@ function App() {
                         Enter an address by postcode add personal info and done! 👏
                     </small>
                 </h1>
-                {/* TODO: Create generic <Form /> component to display form rows, legend and a submit button  */}
-                <form onSubmit={handleAddressSubmit}>
-                    <fieldset>
-                        <legend>🏠 Find an address</legend>
-                        <div className={styles.formRow}>
-                            <InputText
-                                name="postCode"
-                                onChange={handleFieldChange}
-                                placeholder="Post Code"
-                                value={formFields.postCode}
-                            />
-                        </div>
-                        <div className={styles.formRow}>
-                            <InputText
-                                name="houseNumber"
-                                onChange={handleFieldChange}
-                                value={formFields.houseNumber}
-                                placeholder="House number"
-                            />
-                        </div>
-                        <Button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Finding...' : 'Find'}
-                        </Button>
-                    </fieldset>
-                </form>
+                <Form
+                    legend="🏠 Find an address"
+                    onSubmit={handleAddressSubmit}
+                    submitButtonText={isLoading ? "Finding..." : "Find"}
+                    submitButtonDisabled={isLoading}
+                >
+                    <div className={styles.formRow}>
+                        <InputText
+                            name="postCode"
+                            onChange={handleFieldChange}
+                            placeholder="Post Code"
+                            value={formFields.postCode}
+                        />
+                    </div>
+                    <div className={styles.formRow}>
+                        <InputText
+                            name="houseNumber"
+                            onChange={handleFieldChange}
+                            value={formFields.houseNumber}
+                            placeholder="House number"
+                        />
+                    </div>
+                </Form>
                 {isLoading && (
-                    <div style={{ textAlign: 'center', margin: '1rem 0', color: 'var(--color-text-light)' }}>
+                    <div
+                        style={{
+                            textAlign: "center",
+                            margin: "1rem 0",
+                            color: "var(--color-text-light)",
+                        }}
+                    >
                         Loading addresses...
                     </div>
                 )}
@@ -164,36 +173,35 @@ function App() {
                             </Radio>
                         );
                     })}
-                {/* TODO: Create generic <Form /> component to display form rows, legend and a submit button  */}
                 {formFields.selectedAddress && (
-                    <form onSubmit={handlePersonSubmit}>
-                        <fieldset>
-                            <legend>✏️ Add personal info to address</legend>
-                            <div className={styles.formRow}>
-                                <InputText
-                                    name="firstName"
-                                    placeholder="First name"
-                                    onChange={handleFieldChange}
-                                    value={formFields.firstName}
-                                />
-                            </div>
-                            <div className={styles.formRow}>
-                                <InputText
-                                    name="lastName"
-                                    placeholder="Last name"
-                                    onChange={handleFieldChange}
-                                    value={formFields.lastName}
-                                />
-                            </div>
-                            <Button type="submit">Add to addressbook</Button>
-                        </fieldset>
-                    </form>
+                    <Form
+                        legend="✏️ Add personal info to address"
+                        onSubmit={handlePersonSubmit}
+                        submitButtonText="Add to addressbook"
+                    >
+                        <div className={styles.formRow}>
+                            <InputText
+                                name="firstName"
+                                placeholder="First name"
+                                onChange={handleFieldChange}
+                                value={formFields.firstName}
+                            />
+                        </div>
+                        <div className={styles.formRow}>
+                            <InputText
+                                name="lastName"
+                                placeholder="Last name"
+                                onChange={handleFieldChange}
+                                value={formFields.lastName}
+                            />
+                        </div>
+                    </Form>
                 )}
 
                 {/* TODO: Create an <ErrorMessage /> component for displaying an error message */}
-                {error && <div className="error">{error}</div>}
+                {error && <ErrorMessage message={error} />
 
-                {/* TODO: Add a button to clear all form fields. 
+        {/* TODO: Add a button to clear all form fields. 
         Button must look different from the default primary button, see design. 
         Button text name must be "Clear all fields"
         On Click, it must clear all form fields, remove all search results and clear all prior
